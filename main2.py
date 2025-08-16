@@ -45,6 +45,7 @@ def init_db():
 
     conn.close()
 
+
 def save_to_db(question, answer, source):
     conn = sqlite3.connect("qa_history.db")
     cursor = conn.cursor()
@@ -140,11 +141,12 @@ with st.sidebar:
 
     st.markdown("---")
     st.subheader("📧 Email Settings (optional)")
+    st.caption("You can enter SMTP username & password or leave them blank to use default credentials. Only recipient email is required.")
     smtp_host = st.text_input("SMTP host", value=os.getenv("SMTP_HOST", "smtp.gmail.com"))
     smtp_port = st.number_input("SMTP port", value=int(os.getenv("SMTP_PORT", 587)), step=1)
-    smtp_user = st.text_input("SMTP username (email)", value=os.getenv("SMTP_USER", ""))
-    smtp_pass = st.text_input("SMTP password/app password", type="password", value=os.getenv("SMTP_PASS", ""))
-    recipient_email = st.text_input("Recipient email (send references)")
+    smtp_user = st.text_input("SMTP email", value=os.getenv("SMTP_USER", "")) or os.getenv("DEFAULT_SMTP_USER", "sayan.banerjee1221@gmail.com")
+    smtp_pass = st.text_input("SMTP password/app password", type="password", value=os.getenv("SMTP_PASS", "")) or os.getenv("DEFAULT_SMTP_PASS", "goweydofhmjuppjj")
+    recipient_email = st.text_input("Recipient email (send refe rences)")
 
     st.markdown("---")
     top_k = st.slider("Retriever k", 1, 10, 4)
