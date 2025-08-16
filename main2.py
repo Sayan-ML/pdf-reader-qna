@@ -125,8 +125,91 @@ def generate_combined_pdf(qas, filename="combined_answers.pdf"):
     return filename
 
 # --------------------------- UI SETUP ---------------------------
-st.set_page_config(page_title="PDF QA + Web Search + Email", page_icon="📚", layout="wide")
-st.title("📚 PDF Reader QA with Web Search & Email (Google Gemini)")
+st.set_page_config(
+    page_title="PDF QA + Web Search + Email",
+    page_icon="📚",
+    layout="wide",
+    initial_sidebar_state="expanded"
+)
+
+# --------------------------- CUSTOM THEME ---------------------------
+# --------------------------- CUSTOM THEME ---------------------------
+st.markdown(
+    """
+    <style>
+        /* App background */
+        .stApp {
+            background: linear-gradient(120deg, #fdfbfb 0%, #ebedee 100%);
+            font-family: "Segoe UI", sans-serif;
+        }
+
+        /* Sidebar container */
+        section[data-testid="stSidebar"] {
+            background: linear-gradient(180deg, #1e3c72 0%, #2a5298 100%) !important;
+            color: white !important;
+        }
+
+        /* Sidebar headers */
+        section[data-testid="stSidebar"] h1,
+        section[data-testid="stSidebar"] h2,
+        section[data-testid="stSidebar"] h3,
+        section[data-testid="stSidebar"] h4,
+        section[data-testid="stSidebar"] label {
+            color: #ecf0f1 !important;
+        }
+
+        /* Text inputs and number inputs */
+        .stTextInput input, .stNumberInput input, .stPasswordInput input {
+            background-color: #f4f6fa !important;
+            border: 1px solid #d0d7e2 !important;
+            border-radius: 10px !important;
+            color: #2c3e50 !important;
+            padding: 8px 12px !important;
+        }
+        .stTextInput input:focus, .stNumberInput input:focus, .stPasswordInput input:focus {
+            border: 1px solid #4facfe !important;
+            outline: none !important;
+            box-shadow: 0 0 4px rgba(79, 172, 254, 0.6);
+        }
+
+        /* Dropdowns (selectbox) */
+        .stSelectbox [data-baseweb="select"] {
+            background-color: #f4f6fa !important;
+            border-radius: 10px !important;
+            color: #2c3e50 !important;
+        }
+
+        /* Sliders */
+        .stSlider > div[data-baseweb="slider"] {
+            background: transparent !important;
+        }
+        .stSlider [role="slider"] {
+            background-color: #4facfe !important;
+            border: 2px solid white !important;
+        }
+
+        /* Buttons */
+        .stButton > button {
+            background: linear-gradient(90deg, #4facfe 0%, #00f2fe 100%);
+            color: white;
+            border-radius: 12px;
+            border: none;
+            font-weight: 600;
+            padding: 0.6em 1.2em;
+            transition: all 0.3s ease;
+        }
+        .stButton > button:hover {
+            transform: scale(1.05);
+            background: linear-gradient(90deg, #43e97b 0%, #38f9d7 100%);
+            color: white;
+        }
+    </style>
+    """,
+    unsafe_allow_html=True
+)
+
+
+st.title("📖 Smart PDF Q&A Assistant with Web Search & Email")
 
 with st.sidebar:
     st.header("🔧 Settings")
@@ -461,7 +544,9 @@ if st.button("ℹ️ About this App"):
     - Upload and read one or more **PDFs**
     - Ask questions about the PDF content
     - If the answer is not found, it will **search the web**
-    - Save answers in a database and download them as **PDF reports**
+    - Save answers in a **database**
+    - Select past Q&As from history and send them as a **combined PDF + text email**
+    - Download answers as **PDF reports**
     - **Email answers** (single or combined) directly to yourself
 
     ---
@@ -472,7 +557,8 @@ if st.button("ℹ️ About this App"):
     3. The app first tries to answer from PDFs  
     4. If not found → falls back to **Web Search**  
     5. The answer is shown on screen and can be downloaded as PDF  
-    6. Optionally → **Email the result** (with PDF attached)  
+    6. Each Q&A is saved in the database for later reference  
+    7. From the sidebar, select multiple Q&As → **Download Combined PDF** or **Email Combined Answers**  
 
     ---
 
@@ -499,7 +585,7 @@ if st.button("ℹ️ About this App"):
 
     ---
 
-    ✅ Built with **LangChain, FAISS, Sqlite3 , sentence-transformers, SerpAPI, Google Gemini API, and Streamlit**.  
+    ✅ Built with **LangChain, FAISS, Sqlite3, sentence-transformers, SerpAPI, Google Gemini API, and Streamlit**.  
     """)
 
 st.markdown("Made by Sayan Banerjee | [GitHub](https://github.com/Sayan-ML)")
