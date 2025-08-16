@@ -452,4 +452,54 @@ else:
     st.sidebar.info("No Q&As saved yet.")
 
 st.markdown("---")
-st.caption("Built with LangChain, FAISS, sentence-transformers, SerpAPI, Google Gemini API, and Streamlit.")
+st.caption("Built with LangChain, FAISS, Sqlite3 ,sentence-transformers, SerpAPI, Google Gemini API, and Streamlit.")
+# --------------------------- ABOUT BUTTON ---------------------------
+if st.button("ℹ️ About this App"):
+    st.markdown("""
+    ### 📚 What this App Does
+    This app helps you:
+    - Upload and read one or more **PDFs**
+    - Ask questions about the PDF content
+    - If the answer is not found, it will **search the web**
+    - Save answers in a database and download them as **PDF reports**
+    - **Email answers** (single or combined) directly to yourself
+
+    ---
+
+    ### ⚙️ How it Works
+    1. **Upload PDFs** → Click **Build/Refresh Index**  
+    2. **Ask a Question** → Click **Ask**  
+    3. The app first tries to answer from PDFs  
+    4. If not found → falls back to **Web Search**  
+    5. The answer is shown on screen and can be downloaded as PDF  
+    6. Optionally → **Email the result** (with PDF attached)  
+
+    ---
+
+    ### 📧 Email Setup
+    To send answers via email, provide:
+    - **SMTP host** (default: smtp.gmail.com)  
+    - **SMTP port** (465 or 587)  
+    - **SMTP email (username)**  
+    - **SMTP password / App password**  
+    - **Recipient email**  
+
+    ⚠️ **Tip for Gmail users:**  
+    - Go to [Google Account Security → App Passwords](https://myaccount.google.com/apppasswords)  
+    - Generate a 16-character password  
+    - Use that as your **SMTP password** here  
+
+    ---
+
+    ### 🔑 API Keys Required
+    - **Google Gemini API Key** → Get it from [Google AI Studio](https://aistudio.google.com/app/apikey)  
+    - **SerpAPI Key** → Create a free account at [SerpAPI](https://serpapi.com/)  
+
+    Paste your keys into the sidebar inputs to activate features.
+
+    ---
+
+    ✅ Built with **LangChain, FAISS, Sqlite3 , sentence-transformers, SerpAPI, Google Gemini API, and Streamlit**.  
+    """)
+
+st.markdown("Made by Sayan Banerjee | [GitHub](https://github.com/Sayan-ML)")
