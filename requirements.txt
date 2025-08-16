@@ -1,26 +1,27 @@
-streamlit==1.37.0
-python-dotenv==1.0.1
+streamlit
+python-dotenv
 
 # LangChain ecosystem (aligned versions)
-langchain==0.2.12
-langchain-core==0.2.12
-langchain-community==0.2.12
-langchain-google-genai==1.0.3
+langchain
+langchain-core
+langchain-community
+langchain-google-genai
 
 # Vector DB + embeddings
-faiss-cpu==1.7.4
-sentence-transformers==3.0.1
-torch==2.2.2
+faiss-cpu
+sentence-transformers
+torch
 
 # PDF handling
-pypdf==4.3.1
+pypdf
 
 # Web search
-google-search-results==2.4.2
-duckduckgo-search==6.2.11
+google-search-results
+duckduckgo-search
 
 # Optional: ChromaDB if you really need it
-chromadb==0.5.4
+chromadb
 
 # Reports
-reportlab==4.2.2
+reportlab
+
