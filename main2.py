@@ -206,6 +206,11 @@ st.markdown(
         /* Fix main title text color */
             h1, h2, h3, h4, h5, h6 {
                 color: #2c3e50 !important;  /* dark gray/blue text */}
+        /* Main page text color fix (without affecting sidebar) */
+.block-container, .block-container p, .block-container span, .block-container div, .block-container h1, .block-container h2, .block-container h3, .block-container h4, .block-container h5, .block-container h6 {
+    color: #2c3e50 !important;
+}
+
     </style>
     """,
     unsafe_allow_html=True
