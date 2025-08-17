@@ -134,108 +134,47 @@ st.set_page_config(
 
 # --------------------------- CUSTOM THEME ---------------------------
 # --------------------------- CUSTOM THEME ---------------------------
-st.markdown(
-    """
-    <style>
-        /* App background */
-        .stApp {
-            background: linear-gradient(120deg, #fdfbfb 0%, #ebedee 100%);
-            font-family: "Segoe UI", sans-serif;
-        }
 
-        /* Sidebar container */
-        section[data-testid="stSidebar"] {
-            background: linear-gradient(180deg, #1e3c72 0%, #2a5298 100%) !important;
-            color: white !important;
-        }
 
-        /* Sidebar headers */
-        section[data-testid="stSidebar"] h1,
-        section[data-testid="stSidebar"] h2,
-        section[data-testid="stSidebar"] h3,
-        section[data-testid="stSidebar"] h4,
-        section[data-testid="stSidebar"] label {
-            color: #ecf0f1 !important;
-        }
+# --- Custom CSS ---
+st.markdown("""
+<style>
+/* 🔹 Main content text stays dark */
+.stMarkdown, .stMarkdown p, .stMarkdown span {
+    color: #2c3e50 !important;
+}
 
-        /* Text inputs and number inputs */
-        .stTextInput input, .stNumberInput input, .stPasswordInput input {
-            background-color: #f4f6fa !important;
-            border: 1px solid #d0d7e2 !important;
-            border-radius: 10px !important;
-            color: #2c3e50 !important;
-            padding: 8px 12px !important;
-        }
-        .stTextInput input:focus, .stNumberInput input:focus, .stPasswordInput input:focus {
-            border: 1px solid #4facfe !important;
-            outline: none !important;
-            box-shadow: 0 0 4px rgba(79, 172, 254, 0.6);
-        }
+/* 🔹 Sidebar background */
+section[data-testid="stSidebar"] {
+    background-color: #1e3d7b !important;
+}
 
-        /* Dropdowns (selectbox) */
-        .stSelectbox [data-baseweb="select"] {
-            background-color: #f4f6fa !important;
-            border-radius: 10px !important;
-            color: #2c3e50 !important;
-        }
+/* 🔹 Sidebar labels & headings white */
+section[data-testid="stSidebar"] h1,
+section[data-testid="stSidebar"] h2,
+section[data-testid="stSidebar"] h3,
+section[data-testid="stSidebar"] h4,
+section[data-testid="stSidebar"] label,
+section[data-testid="stSidebar"] span {
+    color: white !important;
+}
 
-        /* Sliders */
-        .stSlider > div[data-baseweb="slider"] {
-            background: transparent !important;
-        }
-        .stSlider [role="slider"] {
-            background-color: #4facfe !important;
-            border: 2px solid white !important;
-        }
+/* 🔹 Sidebar inputs: dark text on light background */
+section[data-testid="stSidebar"] input {
+    color: #2c3e50 !important;
+    background-color: #f4f6fa !important;
+}
 
-        /* Buttons */
-        .stButton > button {
-            background: linear-gradient(90deg, #4facfe 0%, #00f2fe 100%);
-            color: white;
-            border-radius: 12px;
-            border: none;
-            font-weight: 600;
-            padding: 0.6em 1.2em;
-            transition: all 0.3s ease;
-        }
-        .stButton > button:hover {
-            transform: scale(1.05);
-            background: linear-gradient(90deg, #43e97b 0%, #38f9d7 100%);
-            color: white;
-        }
-        /* Ensure text is visible on light backgrounds */
-        .stApp, .stMarkdown, .stTextInput, .stNumberInput, .stPasswordInput, .stSelectbox, .stSlider {
-            color: #2c3e50 !important;  /* dark text */
-        }
-        
-        /* Make sure paragraph and headers are dark in main area */
-        .stMarkdown p, .stMarkdown h1, .stMarkdown h2, .stMarkdown h3, .stMarkdown h4, .stMarkdown h5, .stMarkdown h6 {
-            color: #2c3e50 !important;
-        }
-        
-        /* Keep sidebar text white */
-        section[data-testid="stSidebar"] {
-            color: white !important;
-        }
-        section[data-testid="stSidebar"] h1,
-        section[data-testid="stSidebar"] h2,
-        section[data-testid="stSidebar"] h3,
-        section[data-testid="stSidebar"] h4,
-        section[data-testid="stSidebar"] label,
-        section[data-testid="stSidebar"] span {
-            color: white !important;
-        }
-        
-        /* Input text inside sidebar stays dark */
-        section[data-testid="stSidebar"] input {
-            color: #2c3e50 !important;
-            background-color: #f4f6fa !important;
-        }
+/* 🔹 Sidebar help/description text */
+section[data-testid="stSidebar"] .stMarkdown,
+section[data-testid="stSidebar"] .stMarkdown p,
+section[data-testid="stSidebar"] .stMarkdown span,
+section[data-testid="stSidebar"] .stCaption {
+    color: #f0f0f0 !important;
+}
+</style>
+""", unsafe_allow_html=True)
 
-    </style>
-    """,
-    unsafe_allow_html=True
-)
 
 
 st.title("📖 Smart PDF Q&A Assistant with Web Search & Email")
@@ -618,5 +557,3 @@ if st.button("ℹ️ About this App"):
     """)
 
 st.markdown("Made by Sayan Banerjee | [GitHub](https://github.com/Sayan-ML)")
-
-
