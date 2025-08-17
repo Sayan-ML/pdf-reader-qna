@@ -210,6 +210,20 @@ st.markdown(
 .block-container, .block-container p, .block-container span, .block-container div, .block-container h1, .block-container h2, .block-container h3, .block-container h4, .block-container h5, .block-container h6 {
     color: #2c3e50 !important;
 }
+        /* Fix file uploader input */
+.stFileUploader {
+    background-color: #f4f6fa !important;  /* light background */
+    color: #2c3e50 !important;             /* dark text */
+    border: 1px solid #d0d7e2 !important;
+    border-radius: 10px !important;
+    padding: 10px !important;
+}
+
+/* Make "Upload your files" label dark */
+.stFileUploader label {
+    color: #2c3e50 !important;
+}
+
 
     </style>
     """,
