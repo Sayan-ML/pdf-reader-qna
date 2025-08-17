@@ -223,6 +223,18 @@ st.markdown(
 .stFileUploader label {
     color: #2c3e50 !important;
 }
+/* Fix file uploader drop area (especially on mobile) */
+.stFileUploader div[data-testid="stFileUploaderDropzone"] {
+    background-color: #f4f6fa !important;  /* light background */
+    border: 2px dashed #4facfe !important; /* nice accent border */
+    border-radius: 12px !important;
+    color: #2c3e50 !important;             /* dark text */
+}
+
+/* Ensure uploader text is visible */
+.stFileUploader div[data-testid="stFileUploaderDropzone"] * {
+    color: #2c3e50 !important;
+}
 
 
     </style>
