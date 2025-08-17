@@ -217,9 +217,20 @@ st.markdown(
         section[data-testid="stSidebar"] {
             color: white !important;
         }
-        section[data-testid="stSidebar"] * {
+        section[data-testid="stSidebar"] h1,
+        section[data-testid="stSidebar"] h2,
+        section[data-testid="stSidebar"] h3,
+        section[data-testid="stSidebar"] h4,
+        section[data-testid="stSidebar"] label,
+        section[data-testid="stSidebar"] span {
             color: white !important;
-}
+        }
+        
+        /* Input text inside sidebar stays dark */
+        section[data-testid="stSidebar"] input {
+            color: #2c3e50 !important;
+            background-color: #f4f6fa !important;
+        }
 
     </style>
     """,
@@ -607,4 +618,5 @@ if st.button("ℹ️ About this App"):
     """)
 
 st.markdown("Made by Sayan Banerjee | [GitHub](https://github.com/Sayan-ML)")
+
 
