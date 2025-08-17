@@ -117,6 +117,9 @@ def get_answers_by_ids(ids):
     conn.close()
     return rows
 
+import re
+
+# --------------------------- QUIZ GENERATION ---------------------------
 QUIZ_PROMPT = ChatPromptTemplate.from_messages([
     ("system", "You are a quiz generator. Create {num_questions} multiple-choice questions with 4 options each "
                "based strictly on the provided answer. Mark the correct option clearly."),
@@ -163,7 +166,7 @@ def generate_pdf_file(question, answer, filename="response.pdf"):
 
     story.append(Paragraph(f"<b>Question:</b> {clean_text_for_pdf(question)}", styles["Normal"]))
     story.append(Spacer(1, 12))
-    story.append(Paragraph(f"<b>Question:</b> {clean_text_for_pdf(answer)}", styles["Normal"]))
+    story.append(Paragraph(f"<b>Answer:</b> {clean_text_for_pdf(answer)}", styles["Normal"]))
 
 
     doc.build(story)
@@ -182,7 +185,7 @@ def generate_pdf_bytes(question, answer) -> bytes:
 
     story.append(Paragraph(f"<b>Question:</b> {clean_text_for_pdf(question)}", styles["Normal"]))
     story.append(Spacer(1, 12))
-    story.append(Paragraph(f"<b>Question:</b> {clean_text_for_pdf(answer)}", styles["Normal"]))
+    story.append(Paragraph(f"<b>Answer:</b> {clean_text_for_pdf(answer)}", styles["Normal"]))
 
 
     doc.build(story)
@@ -198,7 +201,7 @@ def generate_combined_pdf(qas, filename="combined_answers.pdf"):
     for q, a in qas:
         story.append(Paragraph(f"<b>Question:</b> {clean_text_for_pdf(q)}", styles["Normal"]))
         story.append(Spacer(1, 6))
-        story.append(Paragraph(f"<b>Question:</b> {clean_text_for_pdf(a)}", styles["Normal"]))
+        story.append(Paragraph(f"<b>Answer:</b> {clean_text_for_pdf(a)}", styles["Normal"]))
         story.append(Spacer(1, 18))
         story.append(Paragraph("<hr/>", styles["Normal"]))
         story.append(Spacer(1, 18))
@@ -393,7 +396,8 @@ RAG_PROMPT = ChatPromptTemplate.from_messages([
 WEB_PROMPT = ChatPromptTemplate.from_messages([
     ("system",
      "You are a helpful research assistant. Using the web search results below, answer the user's question. "
-     "Include a brief list of the most relevant references as markdown bullet links with titles and URLs."),
+     "Include a brief list of the most relevant references as markdown bullet links with titles and URLs."
+     ),
     ("human", "Question: {question}\n\nSearch Results:\n{web_results}\n\nAnswer succinctly.")
 ])
 
@@ -682,20 +686,26 @@ if quizzes:
     if selected_quiz_ids and st.sidebar.button("📧 Send Combined Quiz PDF", key="send_combined_quiz_pdf"):
         selected_qas = get_quizzes_by_ids(selected_quiz_ids)
 
-        # Build combined quiz PDF
+        # Build combined quiz PDF (Question + Quiz only, no Answer)
         combined_pdf = generate_combined_pdf(
-            [(f"{q}\n\nAnswer: {a}", quiz) for q, a, quiz in selected_qas],
+            [(f"Question: {q}", quiz) for q, _, quiz in selected_qas],
             filename="combined_quizzes.pdf"
         )
 
         with open(combined_pdf, "rb") as f:
-            st.download_button("⬇️ Download Combined Quiz PDF", f, file_name="combined_quizzes.pdf", key="download_combined_quiz_pdf")
+            st.download_button(
+                "⬇️ Download Combined Quiz PDF",
+                f,
+                file_name="combined_quizzes.pdf",
+                key="download_combined_quiz_pdf"
+            )
 
         if all([recipient_email, smtp_user, smtp_pass, smtp_host, smtp_port]):
             try:
+                # Body with Question + Quiz only
                 body_lines = ["Here are the combined quizzes you selected:\n"]
-                for q, a, quiz in selected_qas:
-                    body_lines.append(f"Q: {q}\nA: {a}\nQuiz:\n{quiz}\n")
+                for q, _, quiz in selected_qas:
+                    body_lines.append(f"Question: {q}\nQuiz:\n{quiz}\n")
                 body_text = "\n".join(body_lines)
 
                 send_email(
@@ -708,6 +718,7 @@ if quizzes:
                 st.success(f"📧 Combined quizzes sent to {recipient_email}!")
             except Exception as e:
                 st.error(f"❌ Failed to send combined quiz email: {e}")
+
 else:
     st.sidebar.info("No quizzes saved yet.")
 
@@ -766,4 +777,3 @@ if st.button("ℹ️ About this App"):
     """)
 
 st.markdown("Made by Sayan Banerjee | [GitHub](https://github.com/Sayan-ML)")
-
