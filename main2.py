@@ -203,6 +203,9 @@ st.markdown(
             background: linear-gradient(90deg, #43e97b 0%, #38f9d7 100%);
             color: white;
         }
+        /* Fix main title text color */
+            h1, h2, h3, h4, h5, h6 {
+                color: #2c3e50 !important;  /* dark gray/blue text */}
     </style>
     """,
     unsafe_allow_html=True
