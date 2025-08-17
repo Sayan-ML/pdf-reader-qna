@@ -203,6 +203,24 @@ st.markdown(
             background: linear-gradient(90deg, #43e97b 0%, #38f9d7 100%);
             color: white;
         }
+        /* Ensure text is visible on light backgrounds */
+        .stApp, .stMarkdown, .stTextInput, .stNumberInput, .stPasswordInput, .stSelectbox, .stSlider {
+            color: #2c3e50 !important;  /* dark text */
+        }
+        
+        /* Make sure paragraph and headers are dark in main area */
+        .stMarkdown p, .stMarkdown h1, .stMarkdown h2, .stMarkdown h3, .stMarkdown h4, .stMarkdown h5, .stMarkdown h6 {
+            color: #2c3e50 !important;
+        }
+        
+        /* Keep sidebar text white */
+        section[data-testid="stSidebar"] {
+            color: white !important;
+        }
+        section[data-testid="stSidebar"] * {
+            color: white !important;
+}
+
     </style>
     """,
     unsafe_allow_html=True
@@ -589,3 +607,4 @@ if st.button("ℹ️ About this App"):
     """)
 
 st.markdown("Made by Sayan Banerjee | [GitHub](https://github.com/Sayan-ML)")
+
