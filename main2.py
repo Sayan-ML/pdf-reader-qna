@@ -45,6 +45,54 @@ def init_db():
 
     conn.close()
 
+def init_quiz_db():
+    conn = sqlite3.connect("quiz_history.db")
+    cursor = conn.cursor()
+    cursor.execute("""
+        CREATE TABLE IF NOT EXISTS quiz_history (
+            id INTEGER PRIMARY KEY AUTOINCREMENT,
+            question TEXT,
+            answer TEXT,
+            quiz TEXT,
+            source TEXT
+        )
+    """)
+    conn.commit()
+
+    if "quiz_db_cleared" not in st.session_state:
+        cursor.execute("DELETE FROM quiz_history")
+        conn.commit()
+        st.session_state["quiz_db_cleared"] = True
+
+    conn.close()
+
+# Initialize databases
+init_db()
+init_quiz_db()
+
+def save_quiz(question, answer, quiz, source):
+    conn = sqlite3.connect("quiz_history.db")
+    cursor = conn.cursor()
+    cursor.execute("INSERT INTO quiz_history (question, answer, quiz, source) VALUES (?, ?, ?, ?)",
+                   (question, answer, quiz, source))
+    conn.commit()
+    conn.close()
+
+def load_quizzes():
+    conn = sqlite3.connect("quiz_history.db")
+    cursor = conn.cursor()
+    cursor.execute("SELECT id, question FROM quiz_history")
+    rows = cursor.fetchall()
+    conn.close()
+    return rows
+
+def get_quizzes_by_ids(ids):
+    conn = sqlite3.connect("quiz_history.db")
+    cursor = conn.cursor()
+    cursor.execute(f"SELECT question, answer, quiz FROM quiz_history WHERE id IN ({','.join('?'*len(ids))})", ids)
+    rows = cursor.fetchall()
+    conn.close()
+    return rows
 
 def save_to_db(question, answer, source):
     conn = sqlite3.connect("qa_history.db")
@@ -69,7 +117,43 @@ def get_answers_by_ids(ids):
     conn.close()
     return rows
 
+QUIZ_PROMPT = ChatPromptTemplate.from_messages([
+    ("system", "You are a quiz generator. Create {num_questions} multiple-choice questions with 4 options each "
+               "based strictly on the provided answer. Mark the correct option clearly."),
+    ("human", "Answer text: {answer}\n\nGenerate quiz:")
+])
+
+
+def generate_quiz(llm, question, answer, source, num_questions=5):
+    chain = QUIZ_PROMPT | llm | StrOutputParser()
+    quiz_text = chain.invoke({"answer": answer, "num_questions": num_questions})
+    save_quiz(question, answer, quiz_text, source)
+    return quiz_text
+
+
 # --------------------------- PDF GENERATION ---------------------------
+import re
+
+def clean_text_for_pdf(text: str) -> str:
+    # Remove bold markers **word**
+    text = re.sub(r"\*\*(.*?)\*\*", r"\1", text)
+
+    # Convert markdown-style bullets into numbered list
+    lines = text.splitlines()
+    cleaned_lines = []
+    counter = 1
+    for line in lines:
+        stripped = line.strip()
+        if stripped.startswith("* "):   # bullet found
+            stripped = f"{counter}. {stripped[2:]}"
+            counter += 1
+        cleaned_lines.append(stripped)
+
+    # Join back and preserve line breaks with <br/>
+    return "<br/>".join(cleaned_lines)
+
+
+
 def generate_pdf_file(question, answer, filename="response.pdf"):
     """(Kept for sidebar combined-PDF flow that prefers file paths.)"""
     buffer = io.BytesIO()
@@ -77,9 +161,10 @@ def generate_pdf_file(question, answer, filename="response.pdf"):
     styles = getSampleStyleSheet()
     story = []
 
-    story.append(Paragraph(f"<b>Question:</b> {question}", styles["Normal"]))
+    story.append(Paragraph(f"<b>Question:</b> {clean_text_for_pdf(question)}", styles["Normal"]))
     story.append(Spacer(1, 12))
-    story.append(Paragraph(f"<b>Answer:</b> {answer}", styles["Normal"]))
+    story.append(Paragraph(f"<b>Question:</b> {clean_text_for_pdf(answer)}", styles["Normal"]))
+
 
     doc.build(story)
     buffer.seek(0)
@@ -95,9 +180,10 @@ def generate_pdf_bytes(question, answer) -> bytes:
     styles = getSampleStyleSheet()
     story = []
 
-    story.append(Paragraph(f"<b>Question:</b> {question}", styles["Normal"]))
+    story.append(Paragraph(f"<b>Question:</b> {clean_text_for_pdf(question)}", styles["Normal"]))
     story.append(Spacer(1, 12))
-    story.append(Paragraph(f"<b>Answer:</b> {answer}", styles["Normal"]))
+    story.append(Paragraph(f"<b>Question:</b> {clean_text_for_pdf(answer)}", styles["Normal"]))
+
 
     doc.build(story)
     buffer.seek(0)
@@ -110,9 +196,9 @@ def generate_combined_pdf(qas, filename="combined_answers.pdf"):
     story = []
 
     for q, a in qas:
-        story.append(Paragraph(f"<b>Question:</b> {q}", styles["Normal"]))
+        story.append(Paragraph(f"<b>Question:</b> {clean_text_for_pdf(q)}", styles["Normal"]))
         story.append(Spacer(1, 6))
-        story.append(Paragraph(f"<b>Answer:</b> {a}", styles["Normal"]))
+        story.append(Paragraph(f"<b>Question:</b> {clean_text_for_pdf(a)}", styles["Normal"]))
         story.append(Spacer(1, 18))
         story.append(Paragraph("<hr/>", styles["Normal"]))
         story.append(Spacer(1, 18))
@@ -268,6 +354,7 @@ with st.sidebar:
     st.markdown("---")
     top_k = st.slider("Retriever k", 1, 10, 4)
     score_threshold = st.slider("Score threshold (0-1)", 0.0, 1.0, 0.5, 0.05)
+    quiz_count = st.slider("Number of quiz questions", 1, 10, 5)
 
 # --------------------------- HELPERS ---------------------------
 def build_vectorstore_from_pdfs(uploaded_files):
@@ -488,7 +575,7 @@ if current:
         for r in current["references"]:
             st.markdown(f"- [{r['title']}]({r['url']})")
 
-    # Download current PDF
+    # Download Answer PDF
     st.download_button(
         "⬇️ Download Answer as PDF",
         data=current["pdf_bytes"],
@@ -496,6 +583,19 @@ if current:
         mime="application/pdf",
         key="download_current_pdf"
     )
+
+    # Generate Quiz Button
+    if st.button("📝 Generate Quiz", key="generate_quiz"):
+            llm = make_llm(google_key, llm_model, temperature)
+            quiz_text = generate_quiz(llm, current["question"], current["answer"], current["source"], quiz_count)
+            st.session_state["latest_quiz"] = quiz_text
+
+
+    # Show generated quiz if available
+    if "latest_quiz" in st.session_state:
+        st.markdown("### 📝 Generated Quiz")
+        st.text(st.session_state["latest_quiz"])
+
 
     # Email current result (separate, stable button)
     can_email = all([recipient_email, smtp_user, smtp_pass, smtp_host, smtp_port])
@@ -568,6 +668,49 @@ if questions:
 else:
     st.sidebar.info("No Q&As saved yet.")
 
+st.sidebar.subheader("📝 Past Quizzes")
+quizzes = load_quizzes()
+
+if quizzes:
+    q_options = {str(q[0]): q[1] for q in quizzes}
+    selected_quiz_ids = st.sidebar.multiselect(
+        "Select quizzes to include:",
+        list(q_options.keys()),
+        format_func=lambda x: q_options[x]
+    )
+
+    if selected_quiz_ids and st.sidebar.button("📧 Send Combined Quiz PDF", key="send_combined_quiz_pdf"):
+        selected_qas = get_quizzes_by_ids(selected_quiz_ids)
+
+        # Build combined quiz PDF
+        combined_pdf = generate_combined_pdf(
+            [(f"{q}\n\nAnswer: {a}", quiz) for q, a, quiz in selected_qas],
+            filename="combined_quizzes.pdf"
+        )
+
+        with open(combined_pdf, "rb") as f:
+            st.download_button("⬇️ Download Combined Quiz PDF", f, file_name="combined_quizzes.pdf", key="download_combined_quiz_pdf")
+
+        if all([recipient_email, smtp_user, smtp_pass, smtp_host, smtp_port]):
+            try:
+                body_lines = ["Here are the combined quizzes you selected:\n"]
+                for q, a, quiz in selected_qas:
+                    body_lines.append(f"Q: {q}\nA: {a}\nQuiz:\n{quiz}\n")
+                body_text = "\n".join(body_lines)
+
+                send_email(
+                    smtp_host, int(smtp_port), smtp_user, smtp_pass,
+                    recipient_email,
+                    "Your Selected Quizzes",
+                    body=body_text,
+                    attachment_path=combined_pdf
+                )
+                st.success(f"📧 Combined quizzes sent to {recipient_email}!")
+            except Exception as e:
+                st.error(f"❌ Failed to send combined quiz email: {e}")
+else:
+    st.sidebar.info("No quizzes saved yet.")
+
 st.markdown("---")
 st.caption("Built with LangChain, FAISS, Sqlite3 ,sentence-transformers, SerpAPI, Google Gemini API, and Streamlit.")
 # --------------------------- ABOUT BUTTON ---------------------------
@@ -623,3 +766,4 @@ if st.button("ℹ️ About this App"):
     """)
 
 st.markdown("Made by Sayan Banerjee | [GitHub](https://github.com/Sayan-ML)")
+
