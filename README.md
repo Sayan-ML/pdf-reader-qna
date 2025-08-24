@@ -88,6 +88,8 @@ We welcome contributions! 🎉
 
 💡 Feel free to open issues for bug reports, feature requests, or suggestions.
 
+---
+
  ## 💖 Show Your Support
 If you like this project, consider:  
 - ⭐ Starring the repo on GitHub  
