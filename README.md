@@ -71,7 +71,8 @@ Clone the repo and install dependencies:
 git clone https://github.com/your-username/pdf-qa-gemini.git
 cd pdf-qa-gemini
 pip install -r requirements.txt
-streamlit run app.py
+streamlit run app.py '''
+
 
 ## 🌍 Future Improvements
 - 🔊 Add **voice query support** (speak to ask questions)  
