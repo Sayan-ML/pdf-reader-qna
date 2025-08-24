@@ -88,7 +88,18 @@ We welcome contributions! 🎉
 
 💡 Feel free to open issues for bug reports, feature requests, or suggestions.
 
- 
+ ## 💖 Show Your Support
+If you like this project, consider:  
+- ⭐ Starring the repo on GitHub  
+- 🐦 Sharing it with others  
+- ☕ Buying me a coffee to keep development going!  
+
+---
+
+## 📜 License
+This project is licensed under the **MIT License** – you’re free to use, modify, and distribute it.  
+See the [LICENSE](LICENSE) file for full details.  
+
 ## 🚀 Run Locally
 Clone the repo and install dependencies:
 
@@ -100,17 +111,6 @@ streamlit run app.py
 
 ---
 
-## 💖 Show Your Support
-If you like this project, consider:  
-- ⭐ Starring the repo on GitHub  
-- 🐦 Sharing it with others  
-- ☕ Buying me a coffee to keep development going!  
-
----
-
-## 📜 License
-This project is licensed under the **MIT License** – you’re free to use, modify, and distribute it.  
-See the [LICENSE](LICENSE) file for full details.  
 
 ---
 
