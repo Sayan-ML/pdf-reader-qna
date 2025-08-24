@@ -65,17 +65,6 @@ Provide the following in the sidebar:
 
 ---
 
- 
-## 🚀 Run Locally
-Clone the repo and install dependencies:
-
-```bash
-git clone https://github.com/your-username/pdf-qa-gemini.git
-cd pdf-qa-gemini
-pip install -r requirements.txt
-streamlit run app.py 
-
-
 ## 🌍 Future Improvements
 - 🔊 Add **voice query support** (speak to ask questions)  
 - 📱 Build a **mobile-friendly version** (Streamlit Cloud / Flutter frontend)  
@@ -97,7 +86,20 @@ We welcome contributions! 🎉
 4. **Commit and push** your branch  
 5. **Open a Pull Request** 🚀  
 
-💡 Feel free to open issues for bug reports, feature requests, or suggestions.  
+💡 Feel free to open issues for bug reports, feature requests, or suggestions.
+
+ 
+## 🚀 Run Locally
+Clone the repo and install dependencies:
+
+```bash
+git clone https://github.com/your-username/pdf-qa-gemini.git
+cd pdf-qa-gemini
+pip install -r requirements.txt
+streamlit run app.py 
+
+
+  
 
 
 
