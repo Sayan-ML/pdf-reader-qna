@@ -100,6 +100,8 @@ If you like this project, consider:
 This project is licensed under the **MIT License** – you’re free to use, modify, and distribute it.  
 See the [LICENSE](LICENSE) file for full details.  
 
+---
+
 ## 🚀 Run Locally
 Clone the repo and install dependencies:
 
@@ -108,9 +110,5 @@ git clone https://github.com/your-username/pdf-qa-gemini.git
 cd pdf-qa-gemini
 pip install -r requirements.txt
 streamlit run app.py
-
----
-
-
 ---
 
