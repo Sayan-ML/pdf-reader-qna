@@ -97,9 +97,3 @@ git clone https://github.com/your-username/pdf-qa-gemini.git
 cd pdf-qa-gemini
 pip install -r requirements.txt
 streamlit run app.py 
-
-
-  
-
-
-
