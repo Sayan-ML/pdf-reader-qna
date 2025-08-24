@@ -96,4 +96,21 @@ Clone the repo and install dependencies:
 git clone https://github.com/your-username/pdf-qa-gemini.git
 cd pdf-qa-gemini
 pip install -r requirements.txt
-streamlit run app.py 
+streamlit run app.py
+
+---
+
+## 💖 Show Your Support
+If you like this project, consider:  
+- ⭐ Starring the repo on GitHub  
+- 🐦 Sharing it with others  
+- ☕ Buying me a coffee to keep development going!  
+
+---
+
+## 📜 License
+This project is licensed under the **MIT License** – you’re free to use, modify, and distribute it.  
+See the [LICENSE](LICENSE) file for full details.  
+
+---
+
