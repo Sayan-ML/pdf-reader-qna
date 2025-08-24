@@ -72,3 +72,27 @@ git clone https://github.com/your-username/pdf-qa-gemini.git
 cd pdf-qa-gemini
 pip install -r requirements.txt
 streamlit run app.py
+
+## 🌍 Future Improvements
+- 🔊 Add **voice query support** (speak to ask questions)  
+- 📱 Build a **mobile-friendly version** (Streamlit Cloud / Flutter frontend)  
+- 🧠 Improve retrieval with **advanced embeddings** (FAISS/Weaviate)  
+- 🔒 Add **user authentication & profiles**  
+- 📊 Create an **analytics dashboard** to view usage stats  
+- 📝 Support for more file types (Word, Excel, TXT, CSV)  
+- 🤝 Enable **collaborative mode** (share results with other users)  
+- ☁️ Add **cloud storage support** (Google Drive, OneDrive)  
+
+---
+
+## 🤝 Contributing
+We welcome contributions! 🎉  
+
+1. **Fork** the repository  
+2. **Create a new branch** (`feature-xyz`)  
+3. **Make your changes**  
+4. **Commit and push** your branch  
+5. **Open a Pull Request** 🚀  
+
+💡 Feel free to open issues for bug reports, feature requests, or suggestions.  
+
